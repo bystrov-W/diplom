@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // файл Controller.php
 class Controller
 {
@@ -7,7 +7,7 @@ class Controller
  
     public function __construct()
     {
-        $dsn = 'mysql:dbname=diplom;host=localhost';
+        $dsn = 'mysql:dbname=test;host=127.0.0.1';
         $user = 'root';
         $pass = '';
  
