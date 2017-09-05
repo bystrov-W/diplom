@@ -9,10 +9,9 @@ class QuestionModel extends Model
      *
      * @return object with list of questions
      */
-
     public function listOfQuestions ($filter = null)
     {
-        if (isset($filter)) {
+        if (null !== $filter) {
             $filter = 'WHERE b.id = ' . $filter;
         }
         $query = $this->pdo->prepare("SELECT a.date, a.id, a.username, a.useremail, a.title, a.description, a.status, b.name as category, c.description as answer FROM questions a LEFT JOIN categories b ON b.id = a.category_id LEFT JOIN answers c ON c.question_id = a.id $filter ORDER BY a.id ASC");
@@ -26,13 +25,15 @@ class QuestionModel extends Model
      *
      * @param array $array POST array with params of new question
      *
-     * @return succes message
+     * @return array message
      */
-
-    public function addQuestion ($array)
+    public function addQuestion($array)
     {
+        // функция должна возвращать что-то одно
+        // Сейчас она возвращает то массив, то делает редирект – не хорошее повведенеие
+
         foreach ($array as $param => $key) {
-            if ($param != 'add-question' && empty ($key)) {
+            if ($param !== 'add-question' && empty ($key)) {
                 return [0,0]; // 'Поле ' . $param . ' не заполнено.'
             }
         }
@@ -64,7 +65,6 @@ class QuestionModel extends Model
      *
      * @param array $array POST array with params of the question
      */
-
     public function editQuestion ($array) {
         $action = $this->pdo->prepare('UPDATE questions SET date = ?, username= ?, useremail = ?, title = ?, description = ?, category_id = ?, status = ? WHERE questions.id = ?');
         $action->bindValue (1,$array['question-edit-date'], PDO::PARAM_STR);
@@ -83,7 +83,6 @@ class QuestionModel extends Model
      *
      * @param int $id id of question
      */
-
     public function questionCard ($id)
     {
         $query = $this->pdo->prepare("SELECT a.date, a.id, a.username, a.useremail, a.title, a.description, a.status, b.name as category, c.description as answer FROM questions a LEFT JOIN categories b ON a.category_id = b.id LEFT JOIN answers c ON a.id = c.question_id WHERE a.id = $id");

@@ -12,18 +12,12 @@ class QuestionController extends Controller
 
     public function indexAction()
     {
-        $listOfCategories = new CategoryModel();
-        $listOfCategories = $listOfCategories->listOfCategories();
+        $listOfCategories = (new CategoryModel())->listOfCategories();
+        $listOfQuestions = (new QuestionModel())->listOfQuestions($_POST['categoryFilter'] ?? null);
 
-        $listOfQuestions = new QuestionModel();
-        if (isset($_POST['categoryFilter'])) {
-            $listOfQuestions = $listOfQuestions->listOfQuestions($_POST['categoryFilter']);
-        } else {
-            $listOfQuestions = $listOfQuestions->listOfQuestions();
-        }
         $this->view->generate('index.tmpl', array(
             'rows' => $listOfQuestions,
-            'listOfCategories' => isset($listOfCategories) ? $listOfCategories : null,
+            'listOfCategories' => $listOfCategories ?? null,
         ));
     }
 
@@ -33,9 +27,9 @@ class QuestionController extends Controller
         if (isset($_POST['categoryFilter'])) {
             $filter = 'WHERE b.id =' . $_POST['categoryFilter'];
             return $this->question->listOfQuestions ($filter );
-        } else {
-            return $this->question->listOfQuestions ();
         }
+
+        return $this->question->listOfQuestions ();
     }
 
     //Задать вопрос
@@ -52,8 +46,9 @@ class QuestionController extends Controller
 			}
 		}
         $this->view->generate('ask.tmpl', array(
-			'listOfCategories' => isset($listOfCategories) ? $listOfCategories : null,
-            'message' => isset($message) ? $message : null,
+            // $listOfCategories не определена, тут всегда будет null
+			'listOfCategories' => $listOfCategories ?? null,
+            'message' => $message ?? null,
         ));
         /* $this->indexAction();*/
     }
@@ -80,10 +75,12 @@ class QuestionController extends Controller
         $questionCard = $this->question->questionCard ($_GET['questionId']);
         $this->view->generate('question-edit.tmpl', array(
             'rows' => $questionCard,
-            'listOfCategories' => isset($listOfCategories) ? $listOfCategories : null,
+            'listOfCategories' => $listOfCategories ?? null,
             'stasuses' => array ('На модерации', 'Опубликован', 'Не опубликован'),
-            'message' => isset($message) ? $message : null,
-            'answerForQuestion' => isset($answerForQuestion) ? $answerForQuestion : null,
+            // всегда будет null
+            'message' => $message ?? null,
+            // всегда будет null
+            'answerForQuestion' => $answerForQuestion ?? null,
         ));
     }
 }
