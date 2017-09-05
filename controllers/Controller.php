@@ -16,11 +16,11 @@ class Controller
  
         //Редиректы
         //если не авторизован
-        if (empty($_SESSION['user']) && $_SERVER['REQUEST_URI'] == '/question/index' OR empty($_SESSION['user']) && $_SERVER['REQUEST_URI'] == '/question-edit.php') {
+        if (empty($_SESSION['user']) && $_SERVER['REQUEST_URI'] === '/question/index' OR empty($_SESSION['user']) && $_SERVER['REQUEST_URI'] === '/question-edit.php') {
             header( 'Location: /user/login' );
         }
         //если авторизован
-        if (!empty($_SESSION['user']) && $_SERVER['REQUEST_URI'] == '/user/login') {
+        if (!empty($_SESSION['user']) && $_SERVER['REQUEST_URI'] === '/user/login') {
             header( 'Location: /question/index' );
         }
     }

@@ -9,7 +9,8 @@ class PageController extends Controller
         $this->view->generate('ask.tmpl', array(
             'listOfCategories' => isset($listOfCategories) ? $listOfCategories : null,
             'pageTitle' => 'Задать вопрос',
-            'message' => isset($message) ? $message : null
+            // переменная $message не определена
+            'message' => null
         ));
     }
 }

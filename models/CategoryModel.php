@@ -19,22 +19,24 @@ class CategoryModel extends Model
      */
     public function createCategory ($name)
     {
-        if (empty($name)) {
-            return [0,0];
-        } else {
-            $action = $this->pdo->prepare("SELECT name FROM categories WHERE name = ?");
+        // Старайтесь делать меньше условий, так код становится проще
+        // и опять же странные возвращаемые параметры
+        if (!empty($name)) {
+            $action = $this->pdo->prepare('SELECT name FROM categories WHERE name = ?');
             $action->bindValue(1, $name, PDO::PARAM_STR);
             $action->execute();
             $row = $action->fetchAll();
-            if ($row == true) {
-                return [0,1];
-            } else {
+            if ($row !== true) {
                 $add = $this->pdo->prepare('INSERT INTO categories (name) VALUES (?)');
                 $add->bindParam(1, $name, PDO::PARAM_STR);
                 $add->execute();
                 return [1,0];
             }
+
+            return [0,1];
         }
+
+        return [0,0];
     }
 
     /**

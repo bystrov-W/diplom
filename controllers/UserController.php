@@ -18,19 +18,20 @@ class UserController extends Controller
     {
         $listOfCategories = $this->category->listOfCategoryAction();
         if (isset($_GET['action'])) {
-            $id = isset($_GET['id']) ? $_GET['id'] : '';
-            if ($_GET['action'] == 'change') {
+            $id = $_GET['id'] ?? '';
+            if ($_GET['action'] === 'change') {
                 $listOfUsers = $this->user->allMembers();
                 $this->user->change($id);
-                $idForChanging = isset($_GET['id']) ? $_GET['id'] : '';
+                $idForChanging = $_GET['id'] ?? '';
                 $listOfQuestions = $this->questions->listOfQuestionAction();
                 $this->view->generate('admin.tmpl', array(
                     'idForChanging' => $idForChanging,
                     'listOfUsers' => $listOfUsers,
-                    'action' => isset($_GET['action']) ? $_GET['action'] : null,
-                    'listOfCategories' => isset($listOfCategories) ? $listOfCategories : null,
-                    'message' => isset($message) ? $message : null,
-                    'rows' => isset($listOfQuestions) ? $listOfQuestions : null,
+                    'action' => $_GET['action'] ?? null,
+                    'listOfCategories' => $listOfCategories ?? null,
+                    // тут всегда будет null
+                    'message' => $message ?? null,
+                    'rows' => $listOfQuestions ?? null,
                 ));
             }
         }
@@ -40,8 +41,8 @@ class UserController extends Controller
     {
         $listOfCategories = $this->category->listOfCategoryAction();
         if (isset($_GET['action'])) {
-            $id = isset($_GET['id']) ? $_GET['id'] : '';
-            if ($_GET['action'] == 'delete') {
+            $id = $_GET['id'] ?? '';
+            if ($_GET['action'] === 'delete') {
                 $this->user->delete($id);
             }
         }
@@ -49,9 +50,9 @@ class UserController extends Controller
         $listOfUsers = $this->user->allMembers();
         $this->view->generate('admin.tmpl', array(
             'listOfUsers' => $listOfUsers,
-            'listOfCategories' => isset($listOfCategories) ? $listOfCategories : null,
-            'message' => isset($message) ? $message : null,
-            'rows' => isset($listOfQuestions) ? $listOfQuestions : null,
+            'listOfCategories' => $listOfCategories ?? null,
+            'message' => $message ?? null, // всегда будет null
+            'rows' => $listOfQuestions ?? null,
         ));
     }
 
@@ -86,16 +87,16 @@ class UserController extends Controller
 				}
 			}
             $listOfUsers = $this->user->allMembers();
-            $idForChanging = isset($_GET['id']) ? $_GET['id'] : '';
+            $idForChanging = $_GET['id'] ?? '';
             $listOfCategories = $this->category->listOfCategoryAction();
             $listOfQuestions = $this->questions->listOfQuestionAction();
             $this->view->generate('admin.tmpl', array(
                 'idForChanging' => $idForChanging,
                 'listOfUsers' => $listOfUsers,
-                'action' => isset($_GET['action']) ? $_GET['action'] : null,
-                'message' => isset($message) ? $message : null,
-                'listOfCategories' => isset($listOfCategories) ? $listOfCategories : null,
-                'rows' => isset($listOfQuestions) ? $listOfQuestions : null,
+                'action' => $_GET['action'] ?? null,
+                'message' => $message ?? null,
+                'listOfCategories' => $listOfCategories ?? null,
+                'rows' => $listOfQuestions ?? null,
             ));
         }
     }
@@ -111,9 +112,9 @@ class UserController extends Controller
         $listOfQuestions = $this->questions->listOfQuestionAction();
         $this->view->generate('admin.tmpl', array(
             'listOfUsers' => $listOfUsers,
-            'listOfCategories' => isset($listOfCategories) ? $listOfCategories : null,
-            'message' => isset($message) ? $message : null,
-            'rows' => isset($listOfQuestions) ? $listOfQuestions : null,
+            'listOfCategories' => $listOfCategories ?? null,
+            'message' => $message ?? null,
+            'rows' => $listOfQuestions ?? null,
         ));
     }
 

@@ -9,11 +9,8 @@ class AnswerModel extends Model
      *
      * @param int $id id of question
      */
-
     public function createAnswer ($text, $id) {
-        if (empty($text)) {
-            return [0,0];
-        } else {
+        if (!empty($text)) {
             $add = $this->pdo->prepare('INSERT INTO answers (question_id, description) VALUES (:id, :desc) ON DUPLICATE KEY UPDATE question_id = :id2, description = :desc2');
             $add->bindParam(':desc', $text, PDO::PARAM_STR);
             $add->bindParam(':id', $id, PDO::PARAM_INT);
@@ -22,6 +19,11 @@ class AnswerModel extends Model
             $add->execute();
             return [1,0];
         }
+
+        // Очень странный и не очевидный возвращаемый результат
+        // второй элемент массива всегда 0 – в этом нет смысла
+        // и в общем плохая практика возвращать подобные массивы и потом анализировать их по частям
+        return [0,0];
     }
 
     /**
@@ -29,10 +31,9 @@ class AnswerModel extends Model
      *
      * @param int $questionId id of question
      */
-
     public function answerForQuestion ($questionId)
     {
-        $query = $this->pdo->prepare("SELECT question_id, description FROM answers WHERE question_id = ?");
+        $query = $this->pdo->prepare('SELECT question_id, description FROM answers WHERE question_id = ?');
         $query->bindParam(1, $questionId, PDO::PARAM_INT);
         $query->execute();
         return $query->fetchAll();
